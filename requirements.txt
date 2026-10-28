@@ -1,0 +1,5 @@
+langgraph==1.2.18
+langchain-anthropic==1.7.7
+ddgs==9.16.1
+anthropic==2.3.0
+python-dotenv==1.2.4
