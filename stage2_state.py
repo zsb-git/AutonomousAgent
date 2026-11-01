@@ -37,8 +37,11 @@ MAX_ITERATIONS = 4  # a hard cap, enforced by the graph - not a suggestion to th
 @tool
 def web_search(query: str) -> str:
     """Search the web and return a few short result snippets for the query."""
-    with DDGS() as ddgs:
-        results = ddgs.text(query, max_results=5)
+    try:
+        with DDGS() as ddgs:
+            results = ddgs.text(query, max_results=5)
+    except Exception as exc:
+        return f"Search failed for query '{query}': {exc}"
     organic = [r for r in results if not r.get("title", "").startswith("Ad")]
     if not organic:
         return "No results found."

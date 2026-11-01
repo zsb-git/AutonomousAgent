@@ -29,8 +29,14 @@ load_dotenv()
 @tool
 def web_search(query: str) -> str:
     """Search the web and return a few short result snippets for the query."""
-    with DDGS() as ddgs:
-        results = ddgs.text(query, max_results=5)
+    try:
+        with DDGS() as ddgs:
+            results = ddgs.text(query, max_results=5)
+    except Exception as exc:
+        # ddgs raises an exception (not an empty list) for a "no results"
+        # case among other things - a tool should report failure as text the
+        # LLM can read, not crash the whole run over a mundane search miss.
+        return f"Search failed for query '{query}': {exc}"
 
     # DuckDuckGo mixes sponsored results in with organic ones, marked by a
     # title that starts with "Ad" - skip those, we only want real content.
